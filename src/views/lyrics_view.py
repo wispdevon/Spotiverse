@@ -36,14 +36,17 @@ class LyricsView(Adw.Bin):
         super().__init__(**kwargs)
 
         self.pending_view = None
+        self.current_view = None
+        self.font_scale = 1.0
 
         # Optimize page loading
         self.settings = WebKit.Settings()
-        self.settings.set_enable_javascript(False)
+        self.settings.set_enable_javascript(True)
         self.settings.set_enable_page_cache(False)
 
     def append_view(self, view):
         self.carousel.append(view)
+        self.current_view = view
         if self.pending_view is None:
             view.connect("load-changed", self.on_view_load_changed)
             self.pending_view = view
@@ -55,12 +58,28 @@ class LyricsView(Adw.Bin):
             self.carousel.scroll_to(web_view, True)
             self.pending_view = None
 
-    def append(self, lyrics, song):
+    def append(self, lyrics, song, synced_lines=None):
         view = WebKit.WebView()
         view.set_settings(self.settings)
-        html = lyrics_to_html(lyrics, song)
+        html = lyrics_to_html(lyrics, song, synced_lines, self.font_scale)
         view.load_html(html)
         view.set_vexpand(True)
         view.set_hexpand(True)
         self.append_view(view)
 
+    def update_playback(self, progress_ms, is_playing):
+        if not self.current_view:
+            return
+
+        is_playing_value = "true" if is_playing else "false"
+        script = f"window.updatePlayback({int(progress_ms or 0)}, {is_playing_value});"
+        self.current_view.evaluate_javascript(script, -1)
+
+    def zoom_font(self, delta):
+        self.font_scale = min(1.8, max(0.65, self.font_scale + delta))
+
+        if not self.current_view:
+            return
+
+        script = f"window.setFontScale({self.font_scale:.2f});"
+        self.current_view.evaluate_javascript(script, -1)

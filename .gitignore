@@ -1,3 +1,5 @@
 _build
 .flatpak-builder
-
+.env
+_install
+__pycache__/

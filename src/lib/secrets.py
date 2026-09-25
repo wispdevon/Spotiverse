@@ -21,6 +21,8 @@ import gi
 gi.require_version("Secret", "1")
 from gi.repository import Secret
 import json
+import os
+from pathlib import Path
 
 APP_ID = "io.github.TanmayPatil105.verse"
 
@@ -36,12 +38,83 @@ secrets_dict = {
     "genius-token": None,
 }
 
+ENV_TO_SECRET_KEYS = {
+    "SPOTIFY_CLIENT_ID": "client-id",
+    "SPOTIFY_CLIENT_SECRET": "client-secret",
+    "GENIUS_TOKEN": "genius-token",
+}
+
 
 def setup_secrets():
     global SECRET_SCHEMA
     global attrs
     if SECRET_SCHEMA is None:
         SECRET_SCHEMA = Secret.Schema.new(APP_ID, Secret.SchemaFlags.NONE, attrs)
+    import_env_secrets()
+
+
+def find_env_file():
+    current = Path.cwd()
+    for directory in [current, *current.parents]:
+        env_file = directory / ".env"
+        if env_file.is_file():
+            return env_file
+
+    return None
+
+
+def parse_env_file(env_file):
+    values = {}
+
+    for line in env_file.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip().strip("'\"")
+
+        if key:
+            values[key] = value
+
+    return values
+
+
+def get_env_value(key, default=None):
+    if os.environ.get(key):
+        return os.environ[key]
+
+    env_file = find_env_file()
+    if not env_file:
+        return default
+
+    return parse_env_file(env_file).get(key, default)
+
+
+def import_env_secrets():
+    env_values = {}
+    env_file = find_env_file()
+
+    if env_file:
+        env_values.update(parse_env_file(env_file))
+
+    for key in ENV_TO_SECRET_KEYS:
+        if os.environ.get(key):
+            env_values[key] = os.environ[key]
+
+    updates = {}
+    for env_key, secret_key in ENV_TO_SECRET_KEYS.items():
+        value = env_values.get(env_key)
+        if value:
+            updates[secret_key] = value
+
+    if updates:
+        update_secrets(
+            client_id=updates.get("client-id"),
+            client_secret=updates.get("client-secret"),
+            genius_token=updates.get("genius-token"),
+        )
 
 
 def retrieve_secrets():
@@ -79,4 +152,3 @@ def update_secrets(
     Secret.password_store_sync(
         SECRET_SCHEMA, {}, Secret.COLLECTION_DEFAULT, SECRET_KEY, json_data, None
     )
-

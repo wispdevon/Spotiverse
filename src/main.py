@@ -37,10 +37,20 @@ class VerseApplication(Adw.Application):
         self.create_action("quit", lambda *_: self.quit(), ["<primary>q"])
         self.create_action("about", self.on_about_action)
         self.create_action(
-            "preferences", self.on_preferences_action, ["<primary>comma"]
+            "preferences", self.on_preferences_action, ["<primary>o", "<primary>comma"]
         )
 
         self.create_action("refresh", self.on_refresh_action, ["<primary>r"])
+        self.create_action(
+            "zoom-in",
+            self.on_zoom_in_action,
+            ["<primary>plus", "<primary>equal", "<primary>KP_Add"],
+        )
+        self.create_action(
+            "zoom-out",
+            self.on_zoom_out_action,
+            ["<primary>minus", "<primary>KP_Subtract"],
+        )
 
         setup_secrets()
 
@@ -68,6 +78,12 @@ class VerseApplication(Adw.Application):
 
     def on_refresh_action(self, widget, _):
         self.win.fetch_details()
+
+    def on_zoom_in_action(self, widget, _):
+        self.win.zoom_lyrics(0.1)
+
+    def on_zoom_out_action(self, widget, _):
+        self.win.zoom_lyrics(-0.1)
 
     def create_action(self, name, callback, shortcuts=None):
         action = Gio.SimpleAction.new(name, None)

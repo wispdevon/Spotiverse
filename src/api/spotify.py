@@ -17,15 +17,19 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import base64
+import logging
 import requests
 import os
+from pathlib import Path
 from urllib.parse import urlencode
 from spotipy.oauth2 import SpotifyOAuth, CacheFileHandler
-from ..lib.secrets import retrieve_secrets
+from ..lib.secrets import get_env_value, retrieve_secrets
 
 # api endpoints
 NOW_PLAYING_ENDPOINT = "https://api.spotify.com/v1/me/player/currently-playing"
 TOKEN_ENDPOINT = "https://accounts.spotify.com/api/token"
+DEFAULT_REDIRECT_URI = "http://127.0.0.1:53682"
+logger = logging.getLogger(__name__)
 
 
 def get_access_token():
@@ -55,7 +59,8 @@ def get_access_token():
 
         return response.json()["access_token"]
 
-    except:
+    except Exception:
+        logger.exception("Failed to obtain Spotify access token")
         # callee sets the error
         return None
 
@@ -71,7 +76,8 @@ def get_now_playing(access_token):
         response.raise_for_status()
 
         return response.json()
-    except:
+    except Exception:
+        logger.exception("Failed to fetch Spotify now-playing item")
         return None
 
 
@@ -95,29 +101,34 @@ def get_now_playing_item():
         artists = song["item"]["artists"]
         is_playing = song["is_playing"]
         title = song["item"]["name"]
+        progress_ms = song.get("progress_ms", 0)
+        duration_ms = song["item"].get("duration_ms", 0)
+        item_id = song["item"].get("id")
 
         return {
+            "id": item_id,
             "title": title,
             "artists": artists,
             "is_playing": is_playing,
+            "progress_ms": progress_ms,
+            "duration_ms": duration_ms,
         }
-    except:
+    except Exception:
+        logger.exception("Failed to parse Spotify now-playing item")
         return {"error": "Uh-oh, smells like Ads", "description": "It'll pass.."}
 
 def generate_refresh_token():
-    if "XDG_CACHE_HOME" in os.environ:
-        CACHE_PATH = os.path.join(os.environ.get("XDG_CACHE_HOME"), ".cache")
-    else:
-        CACHE_PATH = "/tmp/.cache"
+    cache_home = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache"))
+    cache_home.mkdir(parents=True, exist_ok=True)
+    CACHE_PATH = cache_home / "verse-spotify-token-cache"
 
     try:
-        CACHE_PATH = os.path.join(os.environ.get("XDG_CACHE_HOME"), ".cache")
         secrets = retrieve_secrets()
         client_id = secrets["client-id"]
         client_secret = secrets["client-secret"]
-        REDIRECT_URI = "http://127.0.0.1:3000"
+        REDIRECT_URI = get_env_value("SPOTIFY_REDIRECT_URI", DEFAULT_REDIRECT_URI)
 
-        cache_handler = CacheFileHandler(cache_path=CACHE_PATH)
+        cache_handler = CacheFileHandler(cache_path=str(CACHE_PATH))
 
         sp_oauth = SpotifyOAuth(
             client_id=client_id,
@@ -132,15 +143,16 @@ def generate_refresh_token():
         _access_token = sp_oauth.get_access_token(_auth_code, as_dict=False)
         refresh_token = sp_oauth.cache_handler.get_cached_token().get("refresh_token")
 
-        if os.path.exists(CACHE_PATH):
-            os.remove(CACHE_PATH)
+        if CACHE_PATH.exists():
+            CACHE_PATH.unlink()
 
         return {"refresh_token": refresh_token}
-    except:
-        if os.path.exists(CACHE_PATH):
-            os.remove(CACHE_PATH)
+    except Exception as error:
+        if CACHE_PATH.exists():
+            CACHE_PATH.unlink()
 
+        logger.exception("Failed to generate Spotify refresh token")
         return {
             "error": "Couldn't fetch",
-            "description": "Make sure API tokens are valid",
+            "description": f"{type(error).__name__}: {error}",
         }
