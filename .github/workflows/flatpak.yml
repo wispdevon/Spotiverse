@@ -16,6 +16,6 @@ jobs:
     - uses: actions/checkout@v4
     - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
       with:
-        bundle: verse.flatpak
-        manifest-path: io.github.TanmayPatil105.verse.json
+        bundle: spotiverse.flatpak
+        manifest-path: io.github.wispdevon.Spotiverse.json
         cache-key: flatpak-builder-${{ github.sha }}

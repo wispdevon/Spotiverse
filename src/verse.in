@@ -30,9 +30,9 @@ localedir = '@localedir@'
 
 sys.path.insert(1, pkgdatadir)
 signal.signal(signal.SIGINT, signal.SIG_DFL)
-locale.bindtextdomain('verse', localedir)
-locale.textdomain('verse')
-gettext.install('verse', localedir)
+locale.bindtextdomain('spotiverse', localedir)
+locale.textdomain('spotiverse')
+gettext.install('spotiverse', localedir)
 
 if __name__ == '__main__':
     import gi

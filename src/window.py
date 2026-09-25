@@ -32,7 +32,7 @@ from .lib.utils import sanitize_lyrics
 from threading import Thread
 
 
-@Gtk.Template(resource_path="/io/github/TanmayPatil105/verse/window.ui")
+@Gtk.Template(resource_path="/io/github/wispdevon/Spotiverse/window.ui")
 class VerseWindow(Adw.ApplicationWindow):
     __gtype_name__ = "VerseWindow"
 

@@ -1,9 +1,9 @@
 {
-    "id" : "io.github.TanmayPatil105.verse",
+    "id" : "io.github.wispdevon.Spotiverse",
     "runtime" : "org.gnome.Platform",
     "runtime-version" : "46",
     "sdk" : "org.gnome.Sdk",
-    "command" : "verse",
+    "command" : "spotiverse",
     "finish-args" : [
         "--share=network",
         "--share=ipc",
@@ -26,13 +26,13 @@
     "modules" : [
         "./python3-requirements.json",
         {
-            "name" : "verse",
+            "name" : "spotiverse",
             "builddir" : true,
             "buildsystem" : "meson",
             "sources" : [
                 {
                     "type" : "git",
-                    "url" : "https://github.com/TanmayPatil105/verse.git",
+                    "url" : "https://github.com/wispdevon/Spotiverse.git",
                     "tag" : "main"
                 }
             ]

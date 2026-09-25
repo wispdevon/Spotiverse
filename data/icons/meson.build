@@ -1,4 +1,4 @@
-application_id = 'io.github.TanmayPatil105.verse'
+application_id = 'io.github.wispdevon.Spotiverse'
 
 scalable_dir = 'hicolor' / 'scalable' / 'apps'
 install_data(

@@ -27,8 +27,8 @@
     </linearGradient>
     <linearGradient gradientUnits="userSpaceOnUse" y2="119" x2="32" y1="1" x1="32" id="linearGradient904" gradientTransform="translate(-7)" xlink:href="#linearGradient902"/>
     <linearGradient id="linearGradient902">
-      <stop id="stop898" offset="0" style="stop-color:#770087;stop-opacity:1;"/>
-      <stop id="stop900" offset="1" style="stop-color:#452981;stop-opacity:1"/>
+      <stop id="stop898" offset="0" style="stop-color:#1ED760;stop-opacity:1;"/>
+      <stop id="stop900" offset="1" style="stop-color:#1DB954;stop-opacity:1"/>
     </linearGradient>
   </defs>
   <path d="m 114,118.00114 a 50,6 0 0 1 -100,0 50,6 0 1 1 100,0 z" id="path3041" style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:0.2;fill:url(#radialGradient3976);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.99999994;marker:none;enable-background:accumulate"/>
@@ -39,7 +39,7 @@
       <rect width="24.629629" height="7.0000005" x="11.685188" y="39.997467" id="rect3700-7" style="fill:url(#linearGradient3950);fill-opacity:1;stroke:none;stroke-width:1"/>
     </g>
   </g>
-  <rect width="93" height="117" rx="5" ry="5" x="17.5" y="1.5000637" id="rect4897" style="stroke: none; opacity: 1; vector-effect: none; fill-opacity: 1; stroke-width: 1; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 4; stroke-dasharray: none; stroke-dashoffset: 0; stroke-opacity: 1; fill: rgb(240, 128, 128);"/>
+  <rect width="93" height="117" rx="5" ry="5" x="17.5" y="1.5000637" id="rect4897" style="stroke: none; opacity: 1; vector-effect: none; fill-opacity: 1; stroke-width: 1; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 4; stroke-dasharray: none; stroke-dashoffset: 0; stroke-opacity: 1; fill: #1DB954;"/>
   <rect style="opacity: 0.5; fill: none; stroke: url('#linearGradient904'); stroke-width: 1; vector-effect: none; fill-opacity: 1; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 4; stroke-dasharray: none; stroke-dashoffset: 0; stroke-opacity: 0;" id="rect3993" y="1.5000026" x="17.5" ry="5" rx="5" height="117" width="93"/>
   <rect style="fill: none; stroke: url('#linearGradient3965'); stroke-width: 1; stroke-linecap: round; stroke-linejoin: round; stroke-miterlimit: 4; stroke-dasharray: none; stroke-dashoffset: 0; opacity: 0.5; vector-effect: none; fill-opacity: 1; stroke-opacity: 0.17;" id="rect6741-5-0-2-3" y="2.5000026" x="18.5" ry="4" rx="4" height="115" width="91"/>
   <rect x="26.91" y="18.65" width="70.485" height="11.119" style="fill: rgb(216, 216, 216); stroke-opacity: 0.07; stroke-miterlimit: 1.8; paint-order: stroke; stroke: rgb(255, 255, 255);"/>

@@ -1,1 +1,1 @@
-i18n.gettext('verse', preset: 'glib')
+i18n.gettext('spotiverse', preset: 'glib')

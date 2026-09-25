@@ -1,6 +1,6 @@
 desktop_file = i18n.merge_file(
-        input: 'io.github.TanmayPatil105.verse.desktop.in',
-       output: 'io.github.TanmayPatil105.verse.desktop',
+        input: 'io.github.wispdevon.Spotiverse.desktop.in',
+       output: 'io.github.wispdevon.Spotiverse.desktop',
          type: 'desktop',
        po_dir: '../po',
       install: true,
@@ -13,8 +13,8 @@ if desktop_utils.found()
 endif
 
 appstream_file = i18n.merge_file(
-        input: 'io.github.TanmayPatil105.verse.metainfo.xml.in',
-       output: 'io.github.TanmayPatil105.verse.metainfo.xml',
+        input: 'io.github.wispdevon.Spotiverse.metainfo.xml.in',
+       output: 'io.github.wispdevon.Spotiverse.metainfo.xml',
        po_dir: '../po',
       install: true,
   install_dir: get_option('datadir') / 'metainfo'
@@ -24,7 +24,7 @@ appstreamcli = find_program('appstreamcli', required: false, disabler: true)
 test('Validate appstream file', appstreamcli,
      args: ['validate', '--no-net', '--explain', appstream_file])
 
-install_data('io.github.TanmayPatil105.verse.gschema.xml',
+install_data('io.github.wispdevon.Spotiverse.gschema.xml',
   install_dir: get_option('datadir') / 'glib-2.0' / 'schemas'
 )
 

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Spotiverse
+Exec=spotiverse
+Icon=io.github.wispdevon.Spotiverse
+Terminal=false
+Type=Application
+Categories=Utility;GTK;
+Keywords=spotiverse;lyrics;spotify;
+StartupNotify=true

@@ -24,12 +24,13 @@ import json
 import os
 from pathlib import Path
 
-APP_ID = "io.github.TanmayPatil105.verse"
+APP_ID = "io.github.wispdevon.Spotiverse"
+LEGACY_APP_ID = "io.github.TanmayPatil105.verse"
 
 attrs = {"api_keys": Secret.SchemaAttributeType.STRING}
 
 SECRET_SCHEMA = None
-SECRET_KEY = "Verse-Login"
+SECRET_KEY = "Spotiverse-Login"
 
 secrets_dict = {
     "client-id": None,
@@ -50,7 +51,40 @@ def setup_secrets():
     global attrs
     if SECRET_SCHEMA is None:
         SECRET_SCHEMA = Secret.Schema.new(APP_ID, Secret.SchemaFlags.NONE, attrs)
+    migrate_legacy_secrets()
     import_env_secrets()
+
+
+def lookup_secrets(schema):
+    password = Secret.password_lookup_sync(schema, {}, None)
+
+    try:
+        if password:
+            return json.loads(password)
+
+    except Exception:
+        return None
+
+    return None
+
+
+def migrate_legacy_secrets():
+    if retrieve_secrets() is not None:
+        return
+
+    legacy_schema = Secret.Schema.new(LEGACY_APP_ID, Secret.SchemaFlags.NONE, attrs)
+    legacy_secrets = lookup_secrets(legacy_schema)
+    if not legacy_secrets:
+        return
+
+    Secret.password_store_sync(
+        SECRET_SCHEMA,
+        {},
+        Secret.COLLECTION_DEFAULT,
+        SECRET_KEY,
+        json.dumps(legacy_secrets, indent=2),
+        None,
+    )
 
 
 def find_env_file():
@@ -119,15 +153,7 @@ def import_env_secrets():
 
 def retrieve_secrets():
     global SECRET_SCHEMA
-    password = Secret.password_lookup_sync(SECRET_SCHEMA, {}, None)
-
-    try:
-        if password:
-            secrets = json.loads(password)
-            return secrets
-
-    except Exception as error:
-        return None
+    return lookup_secrets(SECRET_SCHEMA)
 
 
 def update_secrets(

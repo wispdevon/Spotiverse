@@ -1,7 +1,7 @@
 <a id="readme-top"></a>
 
 <div align="center">
-  <img src="data/icons/hicolor/scalable/apps/io.github.TanmayPatil105.verse.svg" alt="Spotiverse logo" width="160" height="160">
+  <img src="data/icons/hicolor/scalable/apps/io.github.wispdevon.Spotiverse.svg" alt="Spotiverse logo" width="160" height="160">
 
   <h1>Spotiverse</h1>
 
@@ -104,14 +104,14 @@ meson install -C _build
 Run the local build:
 
 ```console
-GSETTINGS_SCHEMA_DIR="$PWD/_install/share/glib-2.0/schemas" "$PWD/_install/bin/verse"
+GSETTINGS_SCHEMA_DIR="$PWD/_install/share/glib-2.0/schemas" "$PWD/_install/bin/spotiverse"
 ```
 
 You can also build through GNOME Builder or install through Flatpak Builder:
 
 ```console
-flatpak-builder --force-clean _flatpak/ io.github.TanmayPatil105.verse.json --user --install
-flatpak run io.github.TanmayPatil105.verse
+flatpak-builder --force-clean _flatpak/ io.github.wispdevon.Spotiverse.json --user --install
+flatpak run io.github.wispdevon.Spotiverse
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

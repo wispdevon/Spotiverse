@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop">
-	<id>io.github.TanmayPatil105.verse</id>
-	<launchable type="desktop-id">io.github.TanmayPatil105.verse.desktop</launchable>
-	<name>verse</name>
-	<summary>Get currently playing Spotify song lyrics</summary>
-	<developer id="io.github.TanmayPatil105">
-		<name>Tanmay Patil</name>
+	<id>io.github.wispdevon.Spotiverse</id>
+	<launchable type="desktop-id">io.github.wispdevon.Spotiverse.desktop</launchable>
+	<name>Spotiverse</name>
+	<summary>Spotify-style synced lyrics for the current track</summary>
+	<developer id="io.github.wispdevon">
+		<name>wispdevon</name>
 	</developer>
 	<metadata_license>CC0-1.0</metadata_license>
 	<project_license>Apache-2.0</project_license>
@@ -15,19 +15,19 @@
 	</categories>
 	<description>
 		<p>
-			A simple application that fetches lyrics of the song currently
-			playing on Spotify and displays it on a beautiful user interface. Features:
+			A Spotify lyrics companion that follows the song currently
+			playing and displays synced lyrics when timestamps are available. Features:
 		</p>
 		<ul>
-			<li>Simple, easy to use interface</li>
-			<li>Paginated view displays previously played songs</li>
-			<li>Multiple themes</li>
+			<li>Spotify-style active lyric highlighting</li>
+			<li>Automatic refresh when the current song changes</li>
+			<li>Keyboard zoom controls</li>
 		</ul>
 	</description>
 
 	<branding>
-		<color type="primary" scheme_preference="light">#1f49e1</color>
-		<color type="primary" scheme_preference="dark">#1c6450</color>
+		<color type="primary" scheme_preference="light">#1DB954</color>
+		<color type="primary" scheme_preference="dark">#1ED760</color>
 	</branding>
 
 	<releases>
@@ -98,27 +98,27 @@
 	  </release>
 	</releases>
 
-	<url type="homepage">https://github.com/TanmayPatil105/verse</url>
+	<url type="homepage">https://github.com/wispdevon/Spotiverse</url>
 	<content_rating type="oars-1.1" />
 	<screenshots>
 		<screenshot type="default">
-			<image type="source">https://raw.githubusercontent.com/TanmayPatil105/verse/main/images/verse-song.png</image>
+			<image type="source">https://raw.githubusercontent.com/wispdevon/Spotiverse/main/images/verse-song.png</image>
 			<caption>Lyrics of current playing song</caption>
 		</screenshot>
 		<screenshot>
-			<image type="source">https://raw.githubusercontent.com/TanmayPatil105/verse/main/images/verse-dark.png</image>
+			<image type="source">https://raw.githubusercontent.com/wispdevon/Spotiverse/main/images/verse-dark.png</image>
 			<caption>Works in Dark mode</caption>
 		</screenshot>
 		<screenshot>
-			<image type="source">https://raw.githubusercontent.com/TanmayPatil105/verse/main/images/verse-preferences.png</image>
+			<image type="source">https://raw.githubusercontent.com/wispdevon/Spotiverse/main/images/verse-preferences.png</image>
 			<caption>Store API secrets</caption>
 		</screenshot>
 		<screenshot>
-			<image type="source">https://raw.githubusercontent.com/TanmayPatil105/verse/main/images/verse-adaptive.png</image>
+			<image type="source">https://raw.githubusercontent.com/wispdevon/Spotiverse/main/images/verse-adaptive.png</image>
 			<caption>Adaptive window</caption>
 		</screenshot>
 		<screenshot>
-			<image type="source">https://raw.githubusercontent.com/TanmayPatil105/verse/main/images/verse-paginated.png</image>
+			<image type="source">https://raw.githubusercontent.com/wispdevon/Spotiverse/main/images/verse-paginated.png</image>
 			<caption>Paginated view displays previously played songs</caption>
 		</screenshot>
 	</screenshots>

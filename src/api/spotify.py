@@ -122,7 +122,7 @@ def get_now_playing_item():
 def generate_refresh_token():
     cache_home = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache"))
     cache_home.mkdir(parents=True, exist_ok=True)
-    CACHE_PATH = cache_home / "verse-spotify-token-cache"
+    CACHE_PATH = cache_home / "spotiverse-spotify-token-cache"
 
     try:
         secrets = retrieve_secrets()

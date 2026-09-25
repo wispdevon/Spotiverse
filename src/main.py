@@ -31,7 +31,7 @@ from .lib.secrets import setup_secrets
 class VerseApplication(Adw.Application):
     def __init__(self):
         super().__init__(
-            application_id="io.github.TanmayPatil105.verse",
+            application_id="io.github.wispdevon.Spotiverse",
             flags=Gio.ApplicationFlags.DEFAULT_FLAGS,
         )
         self.create_action("quit", lambda *_: self.quit(), ["<primary>q"])
@@ -62,13 +62,13 @@ class VerseApplication(Adw.Application):
 
     def on_about_action(self, widget, _):
         about = Adw.AboutDialog(
-            application_name="verse",
-            application_icon="io.github.TanmayPatil105.verse",
-            developer_name="Tanmay Patil",
+            application_name="Spotiverse",
+            application_icon="io.github.wispdevon.Spotiverse",
+            developer_name="wispdevon",
             version="0.1.8",
-            developers=["Tanmay Patil"],
-            website="https://github.com/TanmayPatil105/verse",
-            copyright="© 2025 Tanmay Patil",
+            developers=["wispdevon", "Tanmay Patil"],
+            website="https://github.com/wispdevon/Spotiverse",
+            copyright="© 2025 wispdevon",
         )
         about.present(self.props.active_window)
 

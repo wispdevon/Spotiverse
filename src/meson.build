@@ -22,7 +22,7 @@ conf.set('pkgdatadir', pkgdatadir)
 
 configure_file(
   input: 'verse.in',
-  output: 'verse',
+  output: 'spotiverse',
   configuration: conf,
   install: true,
   install_dir: get_option('bindir'),

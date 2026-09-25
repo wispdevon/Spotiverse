@@ -24,7 +24,7 @@ from ..api.spotify import generate_refresh_token
 
 
 @Gtk.Template(
-    resource_path="/io/github/TanmayPatil105/verse/views/verse_preferences.ui"
+    resource_path="/io/github/wispdevon/Spotiverse/views/verse_preferences.ui"
 )
 class VersePreferences(Adw.PreferencesDialog):
     __gtype_name__ = "VersePreferences"
@@ -34,8 +34,8 @@ class VersePreferences(Adw.PreferencesDialog):
     refresh_token_button = Gtk.Template.Child()
     genius_token_row = Gtk.Template.Child()
 
-    wiki_spotify_url = "https://github.com/TanmayPatil105/verse/tree/main/wiki#spotify"
-    wiki_genius_url = "https://github.com/TanmayPatil105/verse/tree/main/wiki#genius"
+    wiki_spotify_url = "https://github.com/wispdevon/Spotiverse/tree/main/wiki#spotify"
+    wiki_genius_url = "https://github.com/wispdevon/Spotiverse/tree/main/wiki#genius"
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

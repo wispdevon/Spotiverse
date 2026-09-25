@@ -26,7 +26,7 @@ from gi.repository import WebKit
 from ..lib.html import lyrics_to_html
 
 
-@Gtk.Template(resource_path="/io/github/TanmayPatil105/verse/views/lyrics_view.ui")
+@Gtk.Template(resource_path="/io/github/wispdevon/Spotiverse/views/lyrics_view.ui")
 class LyricsView(Adw.Bin):
     __gtype_name__ = "LyricsView"
 
