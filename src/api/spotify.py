@@ -74,6 +74,8 @@ def get_now_playing(access_token):
             },
         )
         response.raise_for_status()
+        if response.status_code == 204 or not response.content:
+            return None
 
         return response.json()
     except Exception:
