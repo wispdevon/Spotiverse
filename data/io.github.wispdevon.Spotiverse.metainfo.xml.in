@@ -31,6 +31,20 @@
 	</branding>
 
 	<releases>
+	  <release version="1.0.0" date="2026-09-27">
+			<description>
+				<p>This release transforms the app into Spotiverse:</p>
+				<ul>
+					<li>Rename the app ID to io.github.wispdevon.Spotiverse</li>
+					<li>Install the application as spotiverse</li>
+					<li>Add Spotify-style synced lyrics with active line tracking</li>
+					<li>Add automatic refresh when the current Spotify song changes</li>
+					<li>Add local .env configuration and a configurable Spotify callback URI</li>
+					<li>Add keyboard lyric zoom controls</li>
+					<li>Refresh the README and app branding</li>
+				</ul>
+			</description>
+	  </release>
 	  <release version="0.1.8" date="2025-05-26">
 			<description>
 				<p>This release adds the following improvements:</p>

@@ -65,7 +65,7 @@ class VerseApplication(Adw.Application):
             application_name="Spotiverse",
             application_icon="io.github.wispdevon.Spotiverse",
             developer_name="wispdevon",
-            version="0.1.8",
+            version="1.0.0",
             developers=["wispdevon", "Tanmay Patil"],
             website="https://github.com/wispdevon/Spotiverse",
             copyright="© 2025 wispdevon",
