@@ -136,14 +136,15 @@ class VerseWindow(Adw.ApplicationWindow):
                     GLib.idle_add(self.status.set_title, "Song is Paused!")
                     GLib.idle_add(self.status.set_description, "Here's the lyrics anyway..")
 
-                artist = ", ".join([_artist["name"] for _artist in song["artists"]])
-                synced_lyrics = get_synced_lyrics(song["title"], artist)
-                if "error" not in synced_lyrics:
-                    self.song = song
-                    self.lyrics = synced_lyrics["lyrics"]
-                    self.synced_lines = synced_lyrics["synced"]
-                    GLib.idle_add(self.display_lyrics)
-                    return
+                if self.settings.get_boolean("synced-lyrics"):
+                    artist = ", ".join([_artist["name"] for _artist in song["artists"]])
+                    synced_lyrics = get_synced_lyrics(song["title"], artist)
+                    if "error" not in synced_lyrics:
+                        self.song = song
+                        self.lyrics = synced_lyrics["lyrics"]
+                        self.synced_lines = synced_lyrics["synced"]
+                        GLib.idle_add(self.display_lyrics)
+                        return
 
                 for artist in song["artists"]:
                     lyrics = get_lyrics (song["title"], artist["name"])

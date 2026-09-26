@@ -36,6 +36,7 @@ Spotiverse is a fork of [verse](https://github.com/TanmayPatil105/verse), a smal
 This fork reshapes the experience around a Spotify-like lyric display:
 
 - Synced lyrics when timestamped LRC lyrics are available
+- Explicit synced lyrics toggle for plain-lyrics fallback behavior
 - Automatic updates when the current Spotify track changes
 - Spotify Web API or MPRIS playback source detection
 - Playback-aware lyric highlighting and centered active lines

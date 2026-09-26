@@ -66,7 +66,14 @@
         </child>
         <child>
           <object class="AdwPreferencesGroup">
-            <property name="title" translatable="yes">Genius</property>
+            <property name="title" translatable="yes">Lyrics</property>
+            <property name="description" translatable="yes">Choose how lyrics are fetched and displayed.</property>
+            <child>
+              <object class="AdwSwitchRow" id="synced_lyrics_row">
+                <property name="title" translatable="yes">Use synced lyrics</property>
+                <property name="subtitle" translatable="yes">Prefer timestamped lyrics for line tracking, then fall back to Genius plain lyrics.</property>
+              </object>
+            </child>
             <child>
               <object class="AdwPasswordEntryRow" id="genius_token_row">
                 <property name="title" translatable="yes">Genius token</property>
