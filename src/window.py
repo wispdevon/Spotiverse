@@ -23,9 +23,11 @@ from gi.repository import Adw
 from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import GLib
+from gi.repository import Gio
 
 from .views.lyrics_view import LyricsView
-from .api.spotify import get_now_playing_item
+from .api.spotify import get_now_playing_item as get_spotify_now_playing_item
+from .api.mpris import get_now_playing_item as get_mpris_now_playing_item
 from .api.lyrics import get_lyrics, get_synced_lyrics
 from .lib.utils import sanitize_lyrics
 
@@ -49,6 +51,7 @@ class VerseWindow(Adw.ApplicationWindow):
         self.lyrics = None
         self.synced_lines = None
         self.fetching = False
+        self.settings = Gio.Settings.new("io.github.wispdevon.Spotiverse")
 
         # set up widgets
         self.status.bind_property(
@@ -92,9 +95,17 @@ class VerseWindow(Adw.ApplicationWindow):
 
         return True
 
+    def get_now_playing_item(self):
+        playback_source = self.settings.get_string("playback-source")
+
+        if playback_source == "mpris":
+            return get_mpris_now_playing_item(self.settings.get_string("mpris-player"))
+
+        return get_spotify_now_playing_item()
+
     # runs on a thread
     def fetch_song(self, show_status=True):
-        song = get_now_playing_item()
+        song = self.get_now_playing_item()
 
         try:
             if "error" not in song:

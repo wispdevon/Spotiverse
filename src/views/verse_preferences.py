@@ -19,8 +19,14 @@
 from gi.repository import Adw
 from gi.repository import Gtk
 from gi.repository import GLib
+from gi.repository import Gio
 from ..lib.secrets import retrieve_secrets, update_secrets
 from ..api.spotify import generate_refresh_token
+from ..api.mpris import list_players
+
+PLAYBACK_SOURCES = ["spotify", "mpris"]
+PLAYBACK_SOURCE_LABELS = ["Spotify Web API", "MPRIS player"]
+AUTOMATIC_MPRIS_LABEL = "Automatic"
 
 
 @Gtk.Template(
@@ -29,6 +35,8 @@ from ..api.spotify import generate_refresh_token
 class VersePreferences(Adw.PreferencesDialog):
     __gtype_name__ = "VersePreferences"
 
+    playback_source_row = Gtk.Template.Child()
+    mpris_player_row = Gtk.Template.Child()
     client_id_row = Gtk.Template.Child()
     client_secret_row = Gtk.Template.Child()
     refresh_token_button = Gtk.Template.Child()
@@ -40,11 +48,39 @@ class VersePreferences(Adw.PreferencesDialog):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+        self.settings = Gio.Settings.new("io.github.wispdevon.Spotiverse")
+        self.mpris_players = []
+
+        self.playback_source_row.set_model(Gtk.StringList.new(PLAYBACK_SOURCE_LABELS))
+        self.playback_source_row.connect(
+            "notify::selected",
+            self.playback_source_row_selected_cb,
+        )
+        self.mpris_player_row.connect(
+            "notify::selected",
+            self.mpris_player_row_selected_cb,
+        )
+
         self.client_id_row.add_suffix(self.wiki_get_token(self.wiki_spotify_url))
         self.client_secret_row.add_suffix(self.wiki_get_token(self.wiki_spotify_url))
         self.genius_token_row.add_suffix(self.wiki_get_token(self.wiki_genius_url))
 
         self.update_widgets()
+
+    def playback_source_row_selected_cb(self, row, _pspec):
+        selected = row.get_selected()
+        if selected < len(PLAYBACK_SOURCES):
+            self.settings.set_string("playback-source", PLAYBACK_SOURCES[selected])
+
+    def mpris_player_row_selected_cb(self, row, _pspec):
+        selected = row.get_selected()
+        if selected == 0:
+            self.settings.set_string("mpris-player", "")
+            return
+
+        player_index = selected - 1
+        if player_index < len(self.mpris_players):
+            self.settings.set_string("mpris-player", self.mpris_players[player_index])
 
     @Gtk.Template.Callback()
     def client_id_row_applied_cb(self, widget, *args):
@@ -118,7 +154,32 @@ class VersePreferences(Adw.PreferencesDialog):
 
     def update_widgets(self):
         secrets = retrieve_secrets()
+        playback_source = self.settings.get_string("playback-source")
+        preferred_mpris_player = self.settings.get_string("mpris-player")
+
+        self.mpris_players = list_players()
+        mpris_labels = [AUTOMATIC_MPRIS_LABEL]
+        mpris_labels.extend([player.replace("org.mpris.MediaPlayer2.", "") for player in self.mpris_players])
+        self.mpris_player_row.set_model(Gtk.StringList.new(mpris_labels))
+
+        if preferred_mpris_player in self.mpris_players:
+            self.mpris_player_row.set_selected(self.mpris_players.index(preferred_mpris_player) + 1)
+        else:
+            self.mpris_player_row.set_selected(0)
+
+        try:
+            self.playback_source_row.set_selected(PLAYBACK_SOURCES.index(playback_source))
+        except ValueError:
+            self.playback_source_row.set_selected(0)
+
         if secrets is None:
+            self.update_refresh_token_button(
+                {
+                    "client-id": None,
+                    "client-secret": None,
+                    "refresh-token": None,
+                }
+            )
             return
 
         if secrets["client-id"]:

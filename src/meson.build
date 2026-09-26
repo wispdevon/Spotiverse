@@ -38,6 +38,7 @@ verse_sources = [
 verse_sources_api = [
   'api/spotify.py',
   'api/lyrics.py',
+  'api/mpris.py',
 ]
 
 verse_sources_lib = [

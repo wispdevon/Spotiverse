@@ -37,6 +37,7 @@ This fork reshapes the experience around a Spotify-like lyric display:
 
 - Synced lyrics when timestamped LRC lyrics are available
 - Automatic updates when the current Spotify track changes
+- Spotify Web API or MPRIS playback source detection
 - Playback-aware lyric highlighting and centered active lines
 - Dark, full-window lyric presentation
 - Keyboard zoom with `Ctrl++` and `Ctrl+-`
@@ -134,6 +135,8 @@ In the Spotify Developer Dashboard, add the exact redirect URI from `SPOTIFY_RED
 For more detail, see [wiki/README.md](wiki/README.md).
 
 After the app starts, open Preferences with `Ctrl+O` and generate the Spotify refresh token.
+
+If you prefer to detect tracks from a local media player, open Preferences and switch Playback Source to `MPRIS player`. You can leave the player on Automatic or choose a specific MPRIS-enabled player.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

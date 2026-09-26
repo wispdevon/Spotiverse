@@ -12,6 +12,24 @@
         <property name="use-underline">True</property>
         <child>
           <object class="AdwPreferencesGroup">
+            <property name="title" translatable="yes">Playback</property>
+            <property name="description" translatable="yes">Choose how Spotiverse detects the current song.</property>
+            <child>
+              <object class="AdwComboRow" id="playback_source_row">
+                <property name="title" translatable="yes">Source</property>
+                <property name="subtitle" translatable="yes">Spotify uses the Web API. MPRIS works with local players that expose media metadata.</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwComboRow" id="mpris_player_row">
+                <property name="title" translatable="yes">MPRIS player</property>
+                <property name="subtitle" translatable="yes">Automatic prefers an actively playing MPRIS player.</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwPreferencesGroup">
             <property name="title" translatable="yes">Spotify</property>
             <child>
               <object class="AdwPasswordEntryRow" id="client_id_row">

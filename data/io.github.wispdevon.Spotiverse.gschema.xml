@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="spotiverse">
 	<schema id="io.github.wispdevon.Spotiverse" path="/io/github/wispdevon/Spotiverse/">
+		<key name="playback-source" type="s">
+			<default>'spotify'</default>
+			<summary>Playback source</summary>
+			<description>The source used to read the currently playing track. Supported values are spotify and mpris.</description>
+		</key>
+		<key name="mpris-player" type="s">
+			<default>''</default>
+			<summary>Preferred MPRIS player</summary>
+			<description>The preferred MPRIS bus name. An empty value automatically picks a running player.</description>
+		</key>
 	</schema>
 </schemalist>
