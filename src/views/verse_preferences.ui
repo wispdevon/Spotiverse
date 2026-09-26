@@ -15,9 +15,9 @@
             <property name="title" translatable="yes">Playback</property>
             <property name="description" translatable="yes">Choose how Spotiverse detects the current song.</property>
             <child>
-              <object class="AdwComboRow" id="playback_source_row">
-                <property name="title" translatable="yes">Source</property>
-                <property name="subtitle" translatable="yes">Spotify uses the Web API. MPRIS works with local players that expose media metadata.</property>
+              <object class="AdwSwitchRow" id="mpris_enabled_row">
+                <property name="title" translatable="yes">Use MPRIS player</property>
+                <property name="subtitle" translatable="yes">Read the current song from a local MPRIS-enabled player instead of the Spotify Web API.</property>
               </object>
             </child>
             <child>

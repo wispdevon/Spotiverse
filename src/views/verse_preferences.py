@@ -24,8 +24,6 @@ from ..lib.secrets import retrieve_secrets, update_secrets
 from ..api.spotify import generate_refresh_token
 from ..api.mpris import list_players
 
-PLAYBACK_SOURCES = ["spotify", "mpris"]
-PLAYBACK_SOURCE_LABELS = ["Spotify Web API", "MPRIS player"]
 AUTOMATIC_MPRIS_LABEL = "Automatic"
 
 
@@ -35,7 +33,7 @@ AUTOMATIC_MPRIS_LABEL = "Automatic"
 class VersePreferences(Adw.PreferencesDialog):
     __gtype_name__ = "VersePreferences"
 
-    playback_source_row = Gtk.Template.Child()
+    mpris_enabled_row = Gtk.Template.Child()
     mpris_player_row = Gtk.Template.Child()
     client_id_row = Gtk.Template.Child()
     client_secret_row = Gtk.Template.Child()
@@ -51,10 +49,9 @@ class VersePreferences(Adw.PreferencesDialog):
         self.settings = Gio.Settings.new("io.github.wispdevon.Spotiverse")
         self.mpris_players = []
 
-        self.playback_source_row.set_model(Gtk.StringList.new(PLAYBACK_SOURCE_LABELS))
-        self.playback_source_row.connect(
-            "notify::selected",
-            self.playback_source_row_selected_cb,
+        self.mpris_enabled_row.connect(
+            "notify::active",
+            self.mpris_enabled_row_active_cb,
         )
         self.mpris_player_row.connect(
             "notify::selected",
@@ -67,10 +64,10 @@ class VersePreferences(Adw.PreferencesDialog):
 
         self.update_widgets()
 
-    def playback_source_row_selected_cb(self, row, _pspec):
-        selected = row.get_selected()
-        if selected < len(PLAYBACK_SOURCES):
-            self.settings.set_string("playback-source", PLAYBACK_SOURCES[selected])
+    def mpris_enabled_row_active_cb(self, row, _pspec):
+        playback_source = "mpris" if row.get_active() else "spotify"
+        self.settings.set_string("playback-source", playback_source)
+        self.mpris_player_row.set_sensitive(row.get_active())
 
     def mpris_player_row_selected_cb(self, row, _pspec):
         selected = row.get_selected()
@@ -156,6 +153,7 @@ class VersePreferences(Adw.PreferencesDialog):
         secrets = retrieve_secrets()
         playback_source = self.settings.get_string("playback-source")
         preferred_mpris_player = self.settings.get_string("mpris-player")
+        mpris_enabled = playback_source == "mpris"
 
         self.mpris_players = list_players()
         mpris_labels = [AUTOMATIC_MPRIS_LABEL]
@@ -167,10 +165,8 @@ class VersePreferences(Adw.PreferencesDialog):
         else:
             self.mpris_player_row.set_selected(0)
 
-        try:
-            self.playback_source_row.set_selected(PLAYBACK_SOURCES.index(playback_source))
-        except ValueError:
-            self.playback_source_row.set_selected(0)
+        self.mpris_enabled_row.set_active(mpris_enabled)
+        self.mpris_player_row.set_sensitive(mpris_enabled)
 
         if secrets is None:
             self.update_refresh_token_button(
