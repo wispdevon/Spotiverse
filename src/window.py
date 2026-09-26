@@ -28,6 +28,8 @@ from gi.repository import Gio
 from .views.lyrics_view import LyricsView
 from .api.spotify import get_now_playing_item as get_spotify_now_playing_item
 from .api.mpris import get_now_playing_item as get_mpris_now_playing_item
+from .api.mpris import MPRIS_OBJECT_PATH
+from .api.mpris import MPRIS_PREFIX
 from .api.lyrics import get_lyrics, get_synced_lyrics
 from .lib.utils import sanitize_lyrics
 
@@ -51,7 +53,9 @@ class VerseWindow(Adw.ApplicationWindow):
         self.lyrics = None
         self.synced_lines = None
         self.fetching = False
+        self.pending_mpris_refresh = False
         self.settings = Gio.Settings.new("io.github.wispdevon.Spotiverse")
+        self.session_bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
 
         # set up widgets
         self.status.bind_property(
@@ -63,6 +67,10 @@ class VerseWindow(Adw.ApplicationWindow):
 
         GLib.idle_add(self.fetch_details)
         GLib.timeout_add_seconds(3, self.poll_spotify)
+        self.settings.connect("changed::playback-source", self.on_playback_setting_changed)
+        self.settings.connect("changed::mpris-player", self.on_playback_setting_changed)
+        self.settings.connect("changed::show-explicit-lyrics", self.on_lyrics_setting_changed)
+        self.setup_mpris_signal_handlers()
 
     @Gtk.Template.Callback()
     def on_search_cb(self, button):
@@ -95,13 +103,80 @@ class VerseWindow(Adw.ApplicationWindow):
 
         return True
 
-    def get_now_playing_item(self):
-        playback_source = self.settings.get_string("playback-source")
+    def setup_mpris_signal_handlers(self):
+        self.session_bus.signal_subscribe(
+            None,
+            "org.freedesktop.DBus.Properties",
+            "PropertiesChanged",
+            MPRIS_OBJECT_PATH,
+            None,
+            Gio.DBusSignalFlags.NONE,
+            self.on_mpris_properties_changed,
+        )
+        self.session_bus.signal_subscribe(
+            "org.freedesktop.DBus",
+            "org.freedesktop.DBus",
+            "NameOwnerChanged",
+            "/org/freedesktop/DBus",
+            None,
+            Gio.DBusSignalFlags.NONE,
+            self.on_name_owner_changed,
+        )
 
-        if playback_source == "mpris":
+    def using_mpris(self):
+        return self.settings.get_string("playback-source") == "mpris"
+
+    def on_playback_setting_changed(self, settings, key):
+        self.song = None
+        if self.using_mpris():
+            self.queue_mpris_refresh()
+        else:
+            self.fetch_details(show_status=False)
+
+    def on_lyrics_setting_changed(self, settings, key):
+        self.song = None
+        self.fetch_details(show_status=False)
+
+    def on_name_owner_changed(self, connection, sender_name, object_path, interface_name, signal_name, parameters):
+        name, _old_owner, _new_owner = parameters.unpack()
+        if name.startswith(MPRIS_PREFIX):
+            self.queue_mpris_refresh()
+
+    def on_mpris_properties_changed(self, connection, sender_name, object_path, interface_name, signal_name, parameters):
+        changed_interface, changed_properties, _invalidated = parameters.unpack()
+        if changed_interface != "org.mpris.MediaPlayer2.Player":
+            return
+
+        if "Metadata" in changed_properties or "PlaybackStatus" in changed_properties:
+            self.queue_mpris_refresh()
+
+    def queue_mpris_refresh(self):
+        if not self.using_mpris():
+            return
+
+        if self.pending_mpris_refresh:
+            return
+
+        self.pending_mpris_refresh = True
+        GLib.timeout_add(250, self.consume_mpris_refresh)
+
+    def consume_mpris_refresh(self):
+        self.pending_mpris_refresh = False
+        if not self.fetching:
+            self.fetch_details(show_status=False)
+
+        return False
+
+    def get_now_playing_item(self):
+        if self.using_mpris():
             return get_mpris_now_playing_item(self.settings.get_string("mpris-player"))
 
         return get_spotify_now_playing_item()
+
+    def should_hide_explicit_lyrics(self, song):
+        return song.get("explicit", False) and not self.settings.get_boolean(
+            "show-explicit-lyrics"
+        )
 
     # runs on a thread
     def fetch_song(self, show_status=True):
@@ -109,6 +184,13 @@ class VerseWindow(Adw.ApplicationWindow):
 
         try:
             if "error" not in song:
+                if self.should_hide_explicit_lyrics(song):
+                    self.song = song
+                    self.lyrics = None
+                    self.synced_lines = None
+                    GLib.idle_add(self.display_explicit_lyrics_hidden)
+                    return
+
                 # if song is unchanged, keep the lyric page and only sync playback time
                 if self.song_unchanged(song):
                     GLib.idle_add(
@@ -136,15 +218,14 @@ class VerseWindow(Adw.ApplicationWindow):
                     GLib.idle_add(self.status.set_title, "Song is Paused!")
                     GLib.idle_add(self.status.set_description, "Here's the lyrics anyway..")
 
-                if self.settings.get_boolean("synced-lyrics"):
-                    artist = ", ".join([_artist["name"] for _artist in song["artists"]])
-                    synced_lyrics = get_synced_lyrics(song["title"], artist)
-                    if "error" not in synced_lyrics:
-                        self.song = song
-                        self.lyrics = synced_lyrics["lyrics"]
-                        self.synced_lines = synced_lyrics["synced"]
-                        GLib.idle_add(self.display_lyrics)
-                        return
+                artist = ", ".join([_artist["name"] for _artist in song["artists"]])
+                synced_lyrics = get_synced_lyrics(song["title"], artist)
+                if "error" not in synced_lyrics:
+                    self.song = song
+                    self.lyrics = synced_lyrics["lyrics"]
+                    self.synced_lines = synced_lyrics["synced"]
+                    GLib.idle_add(self.display_lyrics)
+                    return
 
                 for artist in song["artists"]:
                     lyrics = get_lyrics (song["title"], artist["name"])
@@ -171,6 +252,16 @@ class VerseWindow(Adw.ApplicationWindow):
         self.search_button.set_visible(False)
         self.lyrics_view.append(self.lyrics, self.song, self.synced_lines)
         self.lyrics_view.set_visible(True)
+
+    def display_explicit_lyrics_hidden(self):
+        self.box.set_valign(Gtk.Align.CENTER)
+        self.search_button.set_visible(False)
+        self.lyrics_view.set_visible(False)
+        self.status.set_title("Explicit lyrics hidden")
+        self.status.set_description(
+            "Enable Show explicit lyrics in Preferences to show this song."
+        )
+        self.status.set_visible(True)
 
     def fetch_details(self, show_status=True):
         if self.fetching:

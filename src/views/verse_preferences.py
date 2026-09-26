@@ -35,7 +35,7 @@ class VersePreferences(Adw.PreferencesDialog):
 
     mpris_enabled_row = Gtk.Template.Child()
     mpris_player_row = Gtk.Template.Child()
-    synced_lyrics_row = Gtk.Template.Child()
+    explicit_lyrics_row = Gtk.Template.Child()
     client_id_row = Gtk.Template.Child()
     client_secret_row = Gtk.Template.Child()
     refresh_token_button = Gtk.Template.Child()
@@ -58,9 +58,9 @@ class VersePreferences(Adw.PreferencesDialog):
             "notify::selected",
             self.mpris_player_row_selected_cb,
         )
-        self.synced_lyrics_row.connect(
+        self.explicit_lyrics_row.connect(
             "notify::active",
-            self.synced_lyrics_row_active_cb,
+            self.explicit_lyrics_row_active_cb,
         )
 
         self.client_id_row.add_suffix(self.wiki_get_token(self.wiki_spotify_url))
@@ -84,8 +84,8 @@ class VersePreferences(Adw.PreferencesDialog):
         if player_index < len(self.mpris_players):
             self.settings.set_string("mpris-player", self.mpris_players[player_index])
 
-    def synced_lyrics_row_active_cb(self, row, _pspec):
-        self.settings.set_boolean("synced-lyrics", row.get_active())
+    def explicit_lyrics_row_active_cb(self, row, _pspec):
+        self.settings.set_boolean("show-explicit-lyrics", row.get_active())
 
     @Gtk.Template.Callback()
     def client_id_row_applied_cb(self, widget, *args):
@@ -162,7 +162,7 @@ class VersePreferences(Adw.PreferencesDialog):
         playback_source = self.settings.get_string("playback-source")
         preferred_mpris_player = self.settings.get_string("mpris-player")
         mpris_enabled = playback_source == "mpris"
-        synced_lyrics = self.settings.get_boolean("synced-lyrics")
+        show_explicit_lyrics = self.settings.get_boolean("show-explicit-lyrics")
 
         self.mpris_players = list_players()
         mpris_labels = [AUTOMATIC_MPRIS_LABEL]
@@ -176,7 +176,7 @@ class VersePreferences(Adw.PreferencesDialog):
 
         self.mpris_enabled_row.set_active(mpris_enabled)
         self.mpris_player_row.set_sensitive(mpris_enabled)
-        self.synced_lyrics_row.set_active(synced_lyrics)
+        self.explicit_lyrics_row.set_active(show_explicit_lyrics)
 
         if secrets is None:
             self.update_refresh_token_button(

@@ -69,9 +69,9 @@
             <property name="title" translatable="yes">Lyrics</property>
             <property name="description" translatable="yes">Choose how lyrics are fetched and displayed.</property>
             <child>
-              <object class="AdwSwitchRow" id="synced_lyrics_row">
-                <property name="title" translatable="yes">Use synced lyrics</property>
-                <property name="subtitle" translatable="yes">Prefer timestamped lyrics for line tracking, then fall back to Genius plain lyrics.</property>
+              <object class="AdwSwitchRow" id="explicit_lyrics_row">
+                <property name="title" translatable="yes">Show explicit lyrics</property>
+                <property name="subtitle" translatable="yes">Allow lyrics for tracks marked explicit by the playback source.</property>
               </object>
             </child>
             <child>

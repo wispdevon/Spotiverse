@@ -106,6 +106,7 @@ def get_now_playing_item():
         progress_ms = song.get("progress_ms", 0)
         duration_ms = song["item"].get("duration_ms", 0)
         item_id = song["item"].get("id")
+        explicit = song["item"].get("explicit", False)
 
         return {
             "id": item_id,
@@ -114,6 +115,7 @@ def get_now_playing_item():
             "is_playing": is_playing,
             "progress_ms": progress_ms,
             "duration_ms": duration_ms,
+            "explicit": explicit,
         }
     except Exception:
         logger.exception("Failed to parse Spotify now-playing item")

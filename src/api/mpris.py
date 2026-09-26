@@ -135,6 +135,7 @@ def get_now_playing_item(preferred_player=None):
             "is_playing": playback_status == "Playing",
             "progress_ms": position_us // 1000,
             "duration_ms": duration_us // 1000,
+            "explicit": False,
             "source": player,
         }
     except Exception:

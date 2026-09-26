@@ -36,7 +36,7 @@ Spotiverse is a fork of [verse](https://github.com/TanmayPatil105/verse), a smal
 This fork reshapes the experience around a Spotify-like lyric display:
 
 - Synced lyrics when timestamped LRC lyrics are available
-- Explicit synced lyrics toggle for plain-lyrics fallback behavior
+- Explicit lyrics visibility toggle for tracks marked explicit
 - Automatic updates when the current Spotify track changes
 - Spotify Web API or MPRIS playback source detection
 - Playback-aware lyric highlighting and centered active lines
@@ -158,6 +158,8 @@ Useful shortcuts:
 - `Ctrl+Q`: Quit
 
 If synced lyrics are found, the active line follows the current Spotify playback position. If no synced lyrics are available, Spotiverse falls back to regular Genius lyrics.
+
+Use the `Show explicit lyrics` preference to choose whether lyrics appear for tracks Spotify marks as explicit.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

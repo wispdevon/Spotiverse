@@ -11,10 +11,10 @@
 			<summary>Preferred MPRIS player</summary>
 			<description>The preferred MPRIS bus name. An empty value automatically picks a running player.</description>
 		</key>
-		<key name="synced-lyrics" type="b">
+		<key name="show-explicit-lyrics" type="b">
 			<default>true</default>
-			<summary>Use synced lyrics</summary>
-			<description>Whether to prefer timestamped synced lyrics before falling back to plain Genius lyrics.</description>
+			<summary>Show explicit lyrics</summary>
+			<description>Whether to show lyrics for tracks marked explicit by the playback source.</description>
 		</key>
 	</schema>
 </schemalist>
